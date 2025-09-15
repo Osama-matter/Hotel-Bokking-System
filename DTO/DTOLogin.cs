@@ -1,0 +1,6 @@
+﻿namespace Hotel_Bokking_System.DTO
+{
+    public class DTOLogin
+    {
+    }
+}
