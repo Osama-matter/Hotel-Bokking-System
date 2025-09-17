@@ -37,11 +37,18 @@ namespace Hotel_Bokking_System.Models
         public decimal PricePerNight { get; set; }
 
         [Required]
+        [Display(Name = "Room Description)")]
+        public string Description { get; set; }
+
+
+        [Required]
         [Display(Name = "Status")]
         public RoomStatus Status { get; set; }
 
         // العلاقات
         public ICollection<Cls_Booking> Bookings { get; set; }
         public ICollection<Cls_Reviews> Reviews { get; set; }
+
+        public ICollection<Cls_RoomIMages> iMages { get; set; }
     }
 }

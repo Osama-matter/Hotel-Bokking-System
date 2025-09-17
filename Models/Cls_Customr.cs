@@ -10,9 +10,7 @@ namespace Hotel_Bokking_System.Models
         [Key]
         [Display(Name ="Customr ID")]
         public int CustomarID { get; set; }
-        [Required]
-       
-        public string UserId { get; set; }
+        public string ? UserId { get; set; }
 
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }  // Navigation property
@@ -26,8 +24,11 @@ namespace Hotel_Bokking_System.Models
         public string  Address { get; set; }
         [Required]
 
-        
-        public int LoyaltyPoints { get; set; }  =  0;   
+        [Display(Name ="Address")]
+
+        public string   PhoneNumber { get; set; }
+
+        public int  ? LoyaltyPoints { get; set; }  =  0;   
        
     }
 }

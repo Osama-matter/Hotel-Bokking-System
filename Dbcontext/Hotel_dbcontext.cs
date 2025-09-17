@@ -18,6 +18,8 @@ namespace Hotel_Bokking_System.Data
         public DbSet<Cls_Payments> Payments { get; set; }
         public DbSet<Cls_Reviews> Reviews { get; set; }
 
+        public DbSet<Cls_RoomIMages> iMages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -43,6 +45,11 @@ namespace Hotel_Bokking_System.Data
             builder.Entity<Cls_Payments>()
                 .Property(p => p.Status)
                 .HasConversion<string>();
+            builder.Entity<Cls_RoomIMages>()
+                .HasOne(img => img.Room)
+                .WithMany(r => r.iMages)
+                .HasForeignKey(img => img.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

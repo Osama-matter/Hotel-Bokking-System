@@ -18,8 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interface\" />
-    <Folder Include="Repositry\" />
+    <Folder Include="Git\" />
   </ItemGroup>
 
 </Project>

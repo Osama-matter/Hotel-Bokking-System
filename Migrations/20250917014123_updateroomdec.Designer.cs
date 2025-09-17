@@ -4,6 +4,7 @@ using Hotel_Bokking_System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel_Bokking_System.Migrations
 {
     [DbContext(typeof(Hotel_dbcontext))]
-    partial class Hotel_dbcontextModelSnapshot : ModelSnapshot
+    [Migration("20250917014123_updateroomdec")]
+    partial class updateroomdec
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,14 +74,11 @@ namespace Hotel_Bokking_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LoyaltyPoints")
+                    b.Property<int>("LoyaltyPoints")
                         .HasColumnType("int");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CustomarID");
@@ -433,7 +433,9 @@ namespace Hotel_Bokking_System.Migrations
                 {
                     b.HasOne("Hotel_Bokking_System.UserApplection.ApplicationUser", "User")
                         .WithMany("_Customrs")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

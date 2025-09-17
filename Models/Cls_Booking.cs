@@ -45,7 +45,7 @@ namespace Hotel_Bokking_System.Models
         }
 
         [Display(Name = "Booking Status")]
-        public BookingStatus Status { get; set; }
+        public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
 
 

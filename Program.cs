@@ -1,4 +1,6 @@
-using Hotel_Bokking_System.Data;
+﻿using Hotel_Bokking_System.Data;
+using Hotel_Bokking_System.Interface;
+using Hotel_Bokking_System.Repositry;
 using Hotel_Bokking_System.UserApplection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,30 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 
+// add  Interface  service  
+
+// Register Repositories in DI
+builder.Services.AddScoped<IRoom, RoomsRepository>();
+builder.Services.AddScoped<IBooking, BookingRepository>();
+builder.Services.AddScoped<iCustomr , CustomarRepository>();
+builder.Services.AddScoped<iPayment, PaymentRepository>();
+builder.Services.AddScoped<IReview , ReviewsRepository>();
+
+// Cors
+// إضافة CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
+
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -33,6 +59,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 
