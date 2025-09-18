@@ -4,6 +4,7 @@ using Hotel_Bokking_System.Repositry;
 using Hotel_Bokking_System.UserApplection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +45,13 @@ builder.Services.AddCors(options =>
 });
 
 
-
-
+// Covert  Enum Choise  to string  not  int  
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // 👇 ده اللي بيخلي الـ Enum يتسلسل كـ String مش رقم
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

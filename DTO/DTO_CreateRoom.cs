@@ -1,5 +1,6 @@
 ﻿using Hotel_Bokking_System.Models;
 using System.ComponentModel.DataAnnotations;
+using static Hotel_Bokking_System.Models.Cls_Room;
 
 namespace Hotel_Bokking_System.DTO
 {
@@ -8,20 +9,25 @@ namespace Hotel_Bokking_System.DTO
 
 
 
-            public int RoomID { get; set; }
+        public int RoomID { get; set; }
 
-  
-            public string RoomNumber { get; set; }
+        [UniqueRoomNumber]
+        public string RoomNumber { get; set; }
 
        
-            public Cls_Room.RoomType  Type { get; set; }
+        public Cls_Room.RoomType  Type { get; set; }
 
-            public decimal PricePerNight { get; set; }
+        public decimal PricePerNight { get; set; }
 
-            public string Description { get; set; }
+        public string Description { get; set; }
 
 
-            public Cls_Room.RoomStatus  Status { get; set; }
+        public Cls_Room.RoomStatus  Status { get; set; }
+        public int Capacity { get; set; }
+
+        public BedType bedType { get; set; }
+
+        public short Floor { get; set; }
 
 
 

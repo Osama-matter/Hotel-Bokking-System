@@ -12,6 +12,11 @@ namespace Hotel_Bokking_System.Interface
         Task<DTO_Rooms?> ShowRoomById(int id);
         Task<DTO_Rooms> CreateRoom(DTO_CreateRoom dto);
 
-        Task<DTO_Rooms> Edit(int ID, DTO_CreateRoom DTO_Request); 
+        Task<DTO_Rooms> Edit(int ID, DTO_CreateRoom DTO_Request);
+
+
+        Task<DTO_Rooms?> ShowRoomDetiles(int id);
+
+        Task<List<DTO_Rooms>> FindUsingData(Cls_Room.RoomStatus? status, Cls_Room.BedType? bedType, int? Floor, Cls_Room.RoomType? roomType, decimal? priceperNight);
     }
 }

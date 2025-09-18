@@ -1,5 +1,6 @@
 ﻿using Hotel_Bokking_System.DTO;
 using Hotel_Bokking_System.Interface;
+using Hotel_Bokking_System.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
@@ -19,7 +20,7 @@ namespace Hotel_Bokking_System.Controllers
             RoomRepo = roomRepo;
         }
 
-        [HttpGet(Name = "Get All Room")]
+        [HttpGet("Get All Room")]
 
         public async Task<IActionResult> GetAll()
         {
@@ -30,7 +31,7 @@ namespace Hotel_Bokking_System.Controllers
             return Ok(Room);   // return Data 
         }
 
-        [HttpGet("{ID}")]
+        [HttpGet("Find Using ID {ID}")]
 
         public async Task<IActionResult> GetByID(int  ID)
         {
@@ -38,12 +39,12 @@ namespace Hotel_Bokking_System.Controllers
            var  Room = await RoomRepo.ShowRoomById(ID);
            if(Room == null)
            {
-                return BadRequest(); 
+                return BadRequest($"Room details for ID {ID} not found.");
            }
 
             return Ok(Room);   // return Data 
         }
-        [HttpPost]
+        [HttpPost("Create")]
 
         public async Task<IActionResult> Create([FromForm]DTO_CreateRoom _Rooms)
         {
@@ -51,13 +52,13 @@ namespace Hotel_Bokking_System.Controllers
             if(ModelState.IsValid)
             {
                 await RoomRepo.CreateRoom(_Rooms); 
-                return Ok();
+                return Ok("Saved  OK");
             }
-            return BadRequest();
+            return BadRequest("Feild  to save  data  ");
 
         }
 
-        [HttpPut("{ID:int}")]
+        [HttpPut("Edit/{ID}")]
         public async Task<IActionResult> Edit(int ID, DTO_CreateRoom dTO_EditRoom)
         {
             if (!ModelState.IsValid)
@@ -81,5 +82,29 @@ namespace Hotel_Bokking_System.Controllers
             }
             return NotFound();
         }
+
+        // GET: api/rooms/details/5
+        [HttpGet("details/{id:int}")]
+        public async Task<IActionResult> ShowDetiles(int id)
+        {
+            var details = await RoomRepo.ShowRoomDetiles(id);
+            if (details == null)
+                return NotFound($"Room details for ID {id} not found.");
+
+            return Ok(details);
+        }
+
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> FiltrRoom(Cls_Room.RoomStatus? status, Cls_Room.BedType? bedType ,int ? Floor , Cls_Room.RoomType? roomType, decimal? priceperNight)
+        {
+            var Room =await RoomRepo.FindUsingData(status , bedType , Floor , roomType , priceperNight);
+            if(Room == null)
+            {
+                return BadRequest($"Not Found room have status {status} "); 
+            }
+            return Ok(Room);
+        }
+
     }
 }

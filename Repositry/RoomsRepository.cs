@@ -4,7 +4,10 @@ using Hotel_Bokking_System.Interface;
 using Hotel_Bokking_System.Models;
 using Hotel_Bokking_System.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Net.Mime.MediaTypeNames;
 
 
@@ -94,6 +97,13 @@ namespace Hotel_Bokking_System.Repositry
 
         public async Task<DTO_Rooms> CreateRoom(DTO_CreateRoom dto)
         {
+
+
+            if (await dbcontext.Rooms.AnyAsync(r => r.RoomNumber == dto.RoomNumber))
+            {
+                throw new Exception("Room number already exists.");
+            }
+
             var room = new Cls_Room                             /// take data  from DTO put  in class  ////
             {
                 RoomNumber = dto.RoomNumber,
@@ -101,6 +111,9 @@ namespace Hotel_Bokking_System.Repositry
                 PricePerNight = dto.PricePerNight,
                 Description = dto.Description,
                 Status = dto.Status,
+                Capacity = dto.Capacity,
+                bedType=dto.bedType,
+                Floor = dto.Floor,
                 iMages = new List<Cls_RoomIMages>()
             };
 
@@ -171,10 +184,16 @@ namespace Hotel_Bokking_System.Repositry
             };
         }
 
-
+       
         public async Task<DTO_Rooms> Edit(int ID, DTO_CreateRoom DTO_Request)
         {
             Cls_Room _Room = await dbcontext.Rooms.FirstOrDefaultAsync(e => e.RoomID == ID);
+
+            if (_Room.RoomNumber == DTO_Request.RoomNumber)
+            {
+                throw new Exception("Room number already exists.");
+            }
+
 
             if (_Room != null)
             {
@@ -233,6 +252,110 @@ namespace Hotel_Bokking_System.Repositry
             return null; // إذا لم توجد الغرفة
         }
 
+
+        // show  romm Detiles 
+       
+        public async Task<DTO_Rooms?> ShowRoomDetiles(int id)
+        {
+            var room = await dbcontext.Rooms
+                .Include(e => e.iMages)
+                .Include(e => e.Reviews)
+                .FirstOrDefaultAsync(e => e.RoomID == id);
+
+            if (room == null) return null;
+
+            return new DTO_Rooms
+            {
+                RoomNumber = room.RoomNumber,
+                Type = room.Type,
+                PricePerNight = room.PricePerNight,
+                Description = room.Description,
+                Status = room.Status,
+                bedType=room.bedType,
+                Capacity= room.Capacity,
+                Floor=room.Floor,
+
+                Images = room.iMages?.Select(img => new DTO_RoomImages
+                {
+                    Id = img.Id,
+                    ImagePath = img.ImagePath
+                }).ToList(),
+
+                Reviews = room.Reviews?.Select(rv => new DTO_Reviews
+                {
+                    ID = rv.ID,
+                    CustomarID = rv.CustomarID,
+                    RoomID = rv.RoomID,
+                    Rateing = rv.Rateing,
+                    Comment = rv.Comment,
+                    CreatedAt = rv.CreatedAt
+                }).ToList()
+            };
+        }
+
+
+
+
+
+
+        public async Task<List<DTO_Rooms>> FindUsingData(Cls_Room.RoomStatus? status, Cls_Room.BedType? bedType, int? Floor, Cls_Room.RoomType? roomType, decimal? priceperNight)
+        {
+            var query = dbcontext.Rooms       // Qery Requerment 
+           .AsQueryable();
+
+
+            if (Floor.HasValue)                            // Collect  Query  Data  (Component)
+                query = query.Where(r => r.Floor == Floor.Value);          
+
+            if(bedType.HasValue)
+                query = query.Where(r=> r.bedType == bedType.Value);
+            if (roomType.HasValue)
+                query = query.Where(r => r.Type == roomType.Value);
+
+            if (status.HasValue)
+                query = query.Where(r => r.Status == status.Value);
+
+            if (priceperNight.HasValue)
+                query = query.Where(r => r.PricePerNight <= priceperNight.Value);
+
+            var rooms = await query                                     // Select  Data to  Room have  same  requerment 
+            .Select(r => new DTO_Rooms
+            {
+                RoomNumber = r.RoomNumber,
+                Type = r.Type,
+                PricePerNight = r.PricePerNight,
+                Description = r.Description,
+                Status = r.Status,
+                Images = r.iMages.Select(img => new DTO_RoomImages
+                {
+                    Id = img.Id,
+                    ImagePath = img.ImagePath
+                }).ToList(),
+                Reviews = r.Reviews.Select(rv => new DTO_Reviews
+                {
+                    ID = rv.ID,
+                    CustomarID = rv.CustomarID,
+                    RoomID = rv.RoomID,
+                    Rateing = rv.Rateing,
+                    Comment = rv.Comment,
+                    CreatedAt = rv.CreatedAt
+                }).ToList()
+            })
+            .ToListAsync();
+
+
+            if (rooms ==null || rooms.Count==0)   // Check Nullable of  Query 
+            {
+                return new List<DTO_Rooms>();
+            }
+
+
+            return rooms;   // return Data  if  found  
+
+        }
+
+
+            
     }
 
 }
