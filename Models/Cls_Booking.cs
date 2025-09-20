@@ -32,14 +32,15 @@ namespace Hotel_Bokking_System.Models
         [Display(Name ="Check Out Date")]
         public DateTime CheckOut { get; set; }
 
-       
 
+        public DateTime Created { get; set; }= DateTime.Now;
         public enum BookingStatus
         {
             Pending,     // لسه جديد
             Confirmed,   // اتأكد
             CheckedIn,   // العميل دخل
             CheckedOut,  // العميل خرج
+
             Cancelled,   // اتلغى
             NoShow       // محضرش
         }
@@ -48,6 +49,6 @@ namespace Hotel_Bokking_System.Models
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
 
-
+        public ICollection<Cls_Payments>? Payments { get; set; }
     }
 }

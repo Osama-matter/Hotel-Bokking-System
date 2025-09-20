@@ -1,4 +1,5 @@
-﻿using Hotel_Bokking_System.Interface;
+﻿using Hotel_Bokking_System.DTO;
+using Hotel_Bokking_System.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,5 +16,55 @@ namespace Hotel_Bokking_System.Controllers
             CustomerRepo = _customerRepo;
         }
 
+        [HttpGet("GetAlLl")]
+        public  async Task<IActionResult> GetAll()
+        {
+            var Customr =await CustomerRepo.GetAll();
+            if(Customr != null)
+            {
+                return Ok(Customr);
+            }
+            return Ok("Not  Found nay Customr");
+        }
+
+        [HttpPost("CreateNew")]
+        public async Task<IActionResult> Create([FromForm]DTO_Customer Request_Customer)
+        {
+            if(ModelState.IsValid)
+            {
+                await CustomerRepo.Create(Request_Customer);
+                return Ok("Add Scuess");
+            }
+            return BadRequest(); 
+        }
+
+
+
+        [HttpPut("{ID:int}")]
+
+        public async Task<IActionResult> Edit(int  ID ,[FromForm] DTO_Customer Request_Customer)
+        {
+            if(ModelState.IsValid)
+            {
+                await CustomerRepo.Update( ID, Request_Customer);
+
+                return Ok("Edit Sucess"); 
+            }
+            return BadRequest();
+        }
+
+        [HttpDelete("{ID:int}")]
+
+        public async Task<IActionResult> Delete(int  ID)
+        {
+            if(await CustomerRepo.Delete(ID) == true)
+            {
+                return Ok("Deleted Sucess"); 
+            }
+            return BadRequest();
+        }
+
+
+         
     }
 }

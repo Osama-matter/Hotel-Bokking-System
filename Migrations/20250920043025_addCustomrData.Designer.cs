@@ -4,6 +4,7 @@ using Hotel_Bokking_System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel_Bokking_System.Migrations
 {
     [DbContext(typeof(Hotel_dbcontext))]
-    partial class Hotel_dbcontextModelSnapshot : ModelSnapshot
+    [Migration("20250920043025_addCustomrData")]
+    partial class addCustomrData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -457,7 +460,7 @@ namespace Hotel_Bokking_System.Migrations
             modelBuilder.Entity("Hotel_Bokking_System.Models.Cls_Payments", b =>
                 {
                     b.HasOne("Hotel_Bokking_System.Models.Cls_Booking", "Booking")
-                        .WithMany("Payments")
+                        .WithMany()
                         .HasForeignKey("BookingID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -544,11 +547,6 @@ namespace Hotel_Bokking_System.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Hotel_Bokking_System.Models.Cls_Booking", b =>
-                {
-                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("Hotel_Bokking_System.Models.Cls_Room", b =>

@@ -32,6 +32,7 @@ namespace Hotel_Bokking_System.Repositry
 
             return rooms.Select(r => new DTO_Rooms
             {
+                RoomID = r.RoomID,
                 RoomNumber = r.RoomNumber,
                 Type = r.Type,
                 PricePerNight = r.PricePerNight,
