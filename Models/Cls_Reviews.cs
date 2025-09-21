@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Hotel_Bokking_System.UserApplection;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hotel_Bokking_System.Models
@@ -10,10 +11,10 @@ namespace Hotel_Bokking_System.Models
         public int ID { get; set; }
 
         [Required]
-        public int CustomarID { get; set; }
+        public string Userid { get; set; }
 
-        [ForeignKey(nameof(CustomarID))]
-        public Cls_Customr Customar { get; set; }   // علاقة 1:Many مع العملاء
+        [ForeignKey(nameof(Userid))]
+        public ApplicationUser User  { get; set; }   // علاقة 1:Many مع العملاء
 
         [Required]
         public int RoomID { get; set; }

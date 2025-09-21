@@ -1,7 +1,9 @@
 ﻿using Hotel_Bokking_System.Data;
+using Hotel_Bokking_System.DTO;
 using Hotel_Bokking_System.Interface;
 using Hotel_Bokking_System.Models;
 using Hotel_Bokking_System.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hotel_Bokking_System.Repositry
 {
@@ -12,6 +14,71 @@ namespace Hotel_Bokking_System.Repositry
         {
             dbcontext = context;
         }
+
+        public async Task<List<DTO_Reviews>> ShowAll()
+        {
+            var reviews =await dbcontext.Reviews.
+                Include(r => r.User).ToListAsync();
+            return reviews.Select(r=> new DTO_Reviews
+            {
+                Rateing= r.Rateing,
+                Comment= r.Comment,
+                Userid= r.Userid,
+                UserName = r.User.UserName
+
+            }).ToList();
+        }
+
+        public async Task<DTO_Reviews> Create(DTO_Reviews _Reviews)
+        {
+            var Review = new DTO_Reviews
+            {
+                UserName = _Reviews.UserName,
+                Comment = _Reviews.Comment,
+                Rateing= _Reviews.Rateing,
+                RoomID  = _Reviews.RoomID,
+                CreatedAt = DateTime.Now,
+                Userid = _Reviews.Userid,
+                
+            };
+
+            dbcontext.Add(Review);
+            dbcontext.SaveChanges();
+            return Review;
+        }
+
+        public async Task <bool> Update(int id  , DTO_Reviews _Reviews)
+        {
+            var Review =await dbcontext.Reviews.FirstOrDefaultAsync(e=> e.ID == id);
+
+            if(Review == null)
+            {
+                return false; 
+            }
+
+            Review.Rateing = _Reviews.Rateing;
+            Review.Comment = _Reviews.Comment;
+            Review.Userid = _Reviews.Userid;
+            Review.CreatedAt =DateTime.Now;
+
+            dbcontext.Update(Review);
+             dbcontext.SaveChanges();
+            return true ; 
+           
+        }
+
+        public async Task<bool> Delete(int  id  )
+        {
+            var  reviews = await dbcontext.Reviews.FirstOrDefaultAsync(e=> e.ID == id);
+            if(reviews != null)
+            {
+                dbcontext.Reviews.Remove(reviews);
+                dbcontext.SaveChanges();
+                return true ;
+            }
+            return false ;
+        }
+
 
     }
 }

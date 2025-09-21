@@ -10,7 +10,9 @@ namespace Hotel_Bokking_System.UserApplection
        
         public string  Address { get; set; }
          
-        public ICollection<Cls_Customr>? _Customrs {  get; set; }  
+        public ICollection<Cls_Customr>? _Customrs {  get; set; }
+
+        public ICollection<Cls_Reviews> Reviews { get; set; }
 
     }
 }

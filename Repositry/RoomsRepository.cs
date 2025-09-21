@@ -48,7 +48,7 @@ namespace Hotel_Bokking_System.Repositry
                 Reviews = r.Reviews?.Select(rv => new DTO_Reviews
                 {
                     ID = rv.ID,
-                    CustomarID = rv.CustomarID,
+                    Userid = rv.Userid,
                     RoomID = rv.RoomID,
                     Rateing = rv.Rateing,
                     Comment = rv.Comment,
@@ -84,10 +84,10 @@ namespace Hotel_Bokking_System.Repositry
                 Reviews = room.Reviews?.Select(rv => new DTO_Reviews
                 {
                     ID = rv.ID,
-                    CustomarID = rv.CustomarID,
+                    Userid = rv.Userid,
                     RoomID = rv.RoomID,
                     Rateing = rv.Rateing,
-                    Comment = rv.Comment,
+                    Comment = rv.Comment,   
                     CreatedAt = rv.CreatedAt
                 }).ToList()
             };
@@ -285,7 +285,7 @@ namespace Hotel_Bokking_System.Repositry
                 Reviews = room.Reviews?.Select(rv => new DTO_Reviews
                 {
                     ID = rv.ID,
-                    CustomarID = rv.CustomarID,
+                    Userid = rv.Userid,
                     RoomID = rv.RoomID,
                     Rateing = rv.Rateing,
                     Comment = rv.Comment,
@@ -335,7 +335,7 @@ namespace Hotel_Bokking_System.Repositry
                 Reviews = r.Reviews.Select(rv => new DTO_Reviews
                 {
                     ID = rv.ID,
-                    CustomarID = rv.CustomarID,
+                    Userid = rv.Userid,
                     RoomID = rv.RoomID,
                     Rateing = rv.Rateing,
                     Comment = rv.Comment,

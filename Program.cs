@@ -4,7 +4,10 @@ using Hotel_Bokking_System.Repositry;
 using Hotel_Bokking_System.UserApplection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
 using System.Text.Json.Serialization;
+QuestPDF.Settings.License = LicenseType.Community;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +33,7 @@ builder.Services.AddScoped<IBooking, BookingRepository>();
 builder.Services.AddScoped<iCustomr , CustomarRepository>();
 builder.Services.AddScoped<iPayment, PaymentRepository>();
 builder.Services.AddScoped<IReview , ReviewsRepository>();
+builder.Services.AddScoped<iBill, BillRepostitory>();  
 
 // Cors
 // إضافة CORS

@@ -63,18 +63,6 @@ namespace Hotel_Bokking_System.Repositry
             };
         }
 
-        public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime checkIn, DateTime checkOut)
-        {
-
-            return !await dbcontext.Bookings.AnyAsync(b =>
-                b.RoomID == roomId &&
-                (
-                    (checkIn >= b.CheckIn && checkIn < b.CheckOut) ||
-                    (checkOut > b.CheckIn && checkOut <= b.CheckOut) ||
-                    (checkIn <= b.CheckIn && checkOut >= b.CheckOut)
-                )
-            );
-        }
 
 
 
@@ -114,14 +102,10 @@ namespace Hotel_Bokking_System.Repositry
         {
 
 
-            // ✅ تحقق إن الغرفة موجودة
-            var roomExists = await dbcontext.Rooms.AnyAsync(r => r.RoomID == dto.RoomID);
-            if (!roomExists)
-                throw new Exception("Room not found.");
 
-            bool isRoomBooked =await IsRoomAvailableAsync(dto.RoomID, dto.CheckIn, dto.CheckOut);
-            if (!isRoomBooked)
-                throw new Exception(" Room is already booked for the selected dates.");
+            //Validation
+
+            await BookingValidator.ValidateAsync(dto, dbcontext);
 
             var booking = new Cls_Booking
             {
@@ -146,26 +130,10 @@ namespace Hotel_Bokking_System.Repositry
             if (booking == null) return false;
 
 
-            // ✅ تحقق إن الغرفة موجودة
-            var roomExists = await dbcontext.Rooms.AnyAsync(r => r.RoomID == dto.RoomID);
-            if (!roomExists)
-                throw new Exception("Room not found.");
 
+            //Validation
 
-            //say  it booken if room id same  and  id  of  booking  diffrance  
-            // becouss  if  not  write  b.BookingID != id && this  is make  not able to update Booking this  suppos  this  defrance  booking  opperation 
-            bool isRoomBooked = await dbcontext.Bookings.AnyAsync(b =>   
-            b.RoomID == dto.RoomID &&
-            b.BookingID != id && // ✅ استثناء الحجز الحالي
-            (
-                (dto.CheckIn >= b.CheckIn && dto.CheckIn < b.CheckOut) ||
-                (dto.CheckOut > b.CheckIn && dto.CheckOut <= b.CheckOut) ||
-                (dto.CheckIn <= b.CheckIn && dto.CheckOut >= b.CheckOut)
-            )
-            );
-
-            if (!isRoomBooked)
-                throw new Exception(" Room is already booked for the selected dates.");
+            await BookingValidator.ValidateAsync(dto, dbcontext , id);
 
             booking.CustomarID = dto.CustomarID;
             booking.RoomID = dto.RoomID;
