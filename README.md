@@ -397,4 +397,6 @@ Once the application is running:
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/01ac3a9b-962b-4e8e-8b16-9852afe7c670" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/274569d7-f317-4496-942b-bf3d0a8b24af" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1eaa9e5c-b605-4c20-98ee-e7b7d5ecc8e7" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c1beec09-2105-4585-b9f7-a6c06aa0fc8d" />
+
 
