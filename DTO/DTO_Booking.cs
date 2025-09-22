@@ -14,7 +14,7 @@ namespace Hotel_Bokking_System.DTO
 
         public int CustomarID { get; set; }
 
-
+     
 
 
         public string CustomrName { get; set; }

@@ -12,9 +12,11 @@ namespace Hotel_Bokking_System.Repositry
     {
 
         Hotel_dbcontext dbcontext;
-        public BookingRepository(Hotel_dbcontext context) : base(context)
+        IEmailService _emailService;
+        public BookingRepository(Hotel_dbcontext context, IEmailService emailService) : base(context)
         {
             dbcontext = context;
+            this._emailService=emailService;
         }
 
         public async Task<List<DTO_Booking>> GetAll()
@@ -100,11 +102,7 @@ namespace Hotel_Bokking_System.Repositry
 
         public async Task<int> Create(DTO_Booking dto)
         {
-
-
-
-            //Validation
-
+            // Validation
             await BookingValidator.ValidateAsync(dto, dbcontext);
 
             var booking = new Cls_Booking
@@ -113,27 +111,67 @@ namespace Hotel_Bokking_System.Repositry
                 RoomID = dto.RoomID,
                 CheckIn = dto.CheckIn,
                 CheckOut = dto.CheckOut,
-                Status = dto.Status = Cls_Booking.BookingStatus.Pending,
+                Status = Cls_Booking.BookingStatus.Pending,
                 Created = DateTime.Now,
-                
             };
 
             dbcontext.Bookings.Add(booking);
             await dbcontext.SaveChangesAsync();
 
+            var nights = (booking.CheckOut - booking.CheckIn).Days;
+            if (nights <= 0)
+                throw new InvalidOperationException("Check-out date must be after Check-in date.");
+            
+            var PriceperNight = dbcontext.Rooms
+                .Where(c => c.RoomID == dto.RoomID) // حدد الـ CustomerID
+                .Select(c => c.PricePerNight)
+                .FirstOrDefault();
+
+            var amount = PriceperNight * nights; 
+
+            var customerEmail = dbcontext.Customers
+                .Where(c => c.CustomarID == dto.CustomarID) // حدد الـ CustomerID
+                .Select(c => c.Email)
+                .FirstOrDefault();
+
+
+            // Prepare Bill DTO for email
+            var billDto = new Bill_DTO
+            {
+                BookingID = booking.BookingID,
+                CustomrName = dto.CustomrName ?? "Valued Customer",
+                RoomNumber = dto.RoomNumber ?? "N/A",
+                CheckIn = booking.CheckIn,
+                CheckOut = booking.CheckOut,
+                Amount = amount,
+                paymentStatus = Cls_Payments.PaymentStatus.Pending,
+                Created = booking.Created
+            };
+ 
+            // Send Booking Confirmation Email
+            if (!string.IsNullOrEmpty(customerEmail))
+            {
+                try
+                {
+                    await _emailService.SendBookingConfirmationEmailAsync(customerEmail, billDto);
+                }
+                catch (Exception ex)
+                {
+                    // Log error but don't fail the booking
+                    Console.WriteLine($"Failed to send booking email: {ex.Message}");
+                }
+            }
+
             return booking.BookingID;
         }
+
         public async Task<bool> Update(int id, DTO_Booking dto)
         {
-
-            var booking = await dbcontext.Bookings.FindAsync(id);       // find Booking   
+            var booking = await dbcontext.Bookings.FindAsync(id);
             if (booking == null) return false;
 
-
-
-            //Validation
-
-            await BookingValidator.ValidateAsync(dto, dbcontext , id);
+            // Validation
+            await BookingValidator.ValidateAsync(dto, dbcontext, id);
 
             booking.CustomarID = dto.CustomarID;
             booking.RoomID = dto.RoomID;
@@ -143,7 +181,51 @@ namespace Hotel_Bokking_System.Repositry
             booking.Created = dto.Created;
 
             dbcontext.Bookings.Update(booking);
-            await dbcontext.SaveChangesAsync();
+            await   dbcontext.SaveChangesAsync();
+
+            var nights = (booking.CheckOut - booking.CheckIn).Days;
+            if (nights <= 0)
+                throw new InvalidOperationException("Check-out date must be after Check-in date.");
+
+
+            var PriceperNight = dbcontext.Rooms
+                .Where(c => c.RoomID == dto.RoomID) // حدد الـ Roomid
+                .Select(c => c.PricePerNight)
+                .FirstOrDefault();
+
+            var amount = PriceperNight * nights;
+            var customerEmail = dbcontext.Customers
+             .Where(c => c.CustomarID == dto.CustomarID) // حدد الـ CustomerID
+             .Select(c => c.Email)
+             .FirstOrDefault();
+
+
+
+            // Optional: send email if payment status changed to Paid
+            if (!string.IsNullOrEmpty(customerEmail) && booking.Status == Cls_Booking.BookingStatus.Pending)
+            {
+                var billDto = new Bill_DTO
+                {
+                    BookingID = booking.BookingID,
+                    CustomrName = dto.CustomrName ?? "Valued Customer",
+                    RoomNumber = dto.RoomNumber ?? "N/A",
+                    CheckIn = booking.CheckIn,
+                    CheckOut = booking.CheckOut,
+                    Amount =  amount,
+                    paymentStatus = Cls_Payments.PaymentStatus.Paid,
+                    Created = booking.Created
+
+                };
+
+                try
+                {
+                    await _emailService.SendPaymentConfirmationEmailAsync(customerEmail, billDto);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to send payment email: {ex.Message}");
+                }
+            }
 
             return true;
         }

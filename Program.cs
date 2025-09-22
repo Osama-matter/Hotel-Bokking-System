@@ -112,7 +112,7 @@ builder.Services.AddScoped<iCustomr, CustomarRepository>();
 builder.Services.AddScoped<iPayment, PaymentRepository>();
 builder.Services.AddScoped<IReview, ReviewsRepository>();
 builder.Services.AddScoped<iBill, BillRepostitory>();
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 // CORS
 builder.Services.AddCors(options =>
 {
