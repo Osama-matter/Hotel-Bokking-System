@@ -98,6 +98,41 @@ namespace Hotel_Bokking_System.Controllers
         }
 
 
+        [HttpPost("addEmployee")]
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddEmployee([FromForm] DTO_Register regiestermodel)    /// Make  Post Action to Make  Register Servies 
+        {
+            if (ModelState.IsValid)  // Check Validation of Reguster  data   . 
+            {
+                ApplicationUser user = new ApplicationUser();   // declerate  object from FormApplection to updata  data from form to save reuister 
+                user.UserName = regiestermodel.UserName;    // set  data in Applection Model 
+                user.PhoneNumber = regiestermodel.Phone;   // set  Phone  
+                user.Email = regiestermodel.Email;  // set  Eamil ; 
+                user.Address= regiestermodel.Address;
+
+                IdentityResult result = await _userManager.CreateAsync(user, regiestermodel.Password);
+
+                if (result.Succeeded)   // Check Succeded of  Save  Reguister  data  
+                {
+                    await _userManager.AddToRoleAsync(user, "Employee");
+                    return Ok("Create Succes");    // return Stuts  code  200 to show data save succed
+                }
+
+                else
+                {
+                    foreach (var item in result.Errors)     //   Show eroor  if  found 
+                    {
+                        ModelState.AddModelError("Password", item.Description);
+                    }
+                }
+
+            }
+
+
+            return BadRequest(ModelState);
+
+        }
 
 
 

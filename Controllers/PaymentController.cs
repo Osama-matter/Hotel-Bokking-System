@@ -1,6 +1,7 @@
 ﻿using Hotel_Bokking_System.DTO;
 using Hotel_Bokking_System.Interface;
 using Hotel_Bokking_System.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -9,6 +10,7 @@ namespace Hotel_Bokking_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles ="Admin")]
     public class PaymentController : ControllerBase
     {
 
@@ -42,6 +44,7 @@ namespace Hotel_Bokking_System.Controllers
         }
 
         [HttpPost("Create")]
+        [AllowAnonymous]
         public async Task<IActionResult>Create([FromForm]DTO_Payment payment)
         {
             if(ModelState.IsValid)

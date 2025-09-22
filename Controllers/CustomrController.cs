@@ -1,5 +1,6 @@
 ﻿using Hotel_Bokking_System.DTO;
 using Hotel_Bokking_System.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace Hotel_Bokking_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,Employee")]
     public class CustomrController : ControllerBase
     {
 
@@ -16,7 +18,7 @@ namespace Hotel_Bokking_System.Controllers
             CustomerRepo = _customerRepo;
         }
 
-        [HttpGet("GetAlLl")]
+        [HttpGet("GetAlL")]
         public  async Task<IActionResult> GetAll()
         {
             var Customr =await CustomerRepo.GetAll();
@@ -28,6 +30,7 @@ namespace Hotel_Bokking_System.Controllers
         }
 
         [HttpPost("CreateNew")]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromForm]DTO_Customer Request_Customer)
         {
             if(ModelState.IsValid)
@@ -41,6 +44,7 @@ namespace Hotel_Bokking_System.Controllers
 
 
         [HttpPut("{ID:int}")]
+        [AllowAnonymous]
 
         public async Task<IActionResult> Edit(int  ID ,[FromForm] DTO_Customer Request_Customer)
         {
@@ -54,7 +58,7 @@ namespace Hotel_Bokking_System.Controllers
         }
 
         [HttpDelete("{ID:int}")]
-
+        [AllowAnonymous]
         public async Task<IActionResult> Delete(int  ID)
         {
             if(await CustomerRepo.Delete(ID) == true)
