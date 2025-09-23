@@ -17,34 +17,46 @@ namespace Hotel_Bokking_System.Repositry
 
         public async Task<List<DTO_Reviews>> ShowAll()
         {
-            var reviews =await dbcontext.Reviews.
-                Include(r => r.User).ToListAsync();
-            return reviews.Select(r=> new DTO_Reviews
-            {
-                Rateing= r.Rateing,
-                Comment= r.Comment,
-                Userid= r.Userid,
-                UserName = r.User.UserName
+            var reviews = await dbcontext.Reviews
+                .Include(r => r.User) // يربط AspNetUsers
+                .ToListAsync();
 
+            return reviews.Select(r => new DTO_Reviews
+            {
+                Rateing = r.Rateing,
+                Comment = r.Comment,
+                Userid = r.Userid,        // مفتاح المستخدم
+                RoomID = r.RoomID,
+                ID  = r.ID,
+                CreatedAt = r.CreatedAt  ,
+                UserName = r.User.UserName
+                
             }).ToList();
         }
 
         public async Task<DTO_Reviews> Create(DTO_Reviews _Reviews)
         {
-            var Review = new DTO_Reviews
+            var review = new Cls_Reviews        // Use  Cls Not  DTO to save in data base
             {
-                UserName = _Reviews.UserName,
                 Comment = _Reviews.Comment,
-                Rateing= _Reviews.Rateing,
+                Rateing = _Reviews.Rateing,
                 RoomID  = _Reviews.RoomID,
                 CreatedAt = DateTime.Now,
-                Userid = _Reviews.Userid,
-                
+                Userid = _Reviews.Userid  
             };
 
-            dbcontext.Add(Review);
-            dbcontext.SaveChanges();
-            return Review;
+            dbcontext.Reviews.Add(review);
+            await dbcontext.SaveChangesAsync();
+
+            return new DTO_Reviews
+            {
+                Comment = review.Comment,
+                Rateing = review.Rateing,
+                RoomID = review.RoomID,
+                CreatedAt = review.CreatedAt,
+                Userid = review.Userid,
+                
+            };
         }
 
         public async Task <bool> Update(int id  , DTO_Reviews _Reviews)
@@ -58,7 +70,7 @@ namespace Hotel_Bokking_System.Repositry
 
             Review.Rateing = _Reviews.Rateing;
             Review.Comment = _Reviews.Comment;
-            Review.Userid = _Reviews.Userid;
+
             Review.CreatedAt =DateTime.Now;
 
             dbcontext.Update(Review);

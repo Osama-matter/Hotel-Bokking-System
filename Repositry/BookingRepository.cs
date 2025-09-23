@@ -78,7 +78,7 @@ namespace Hotel_Bokking_System.Repositry
                 .FirstOrDefaultAsync(e => e.BookingID == ID);
 
             if (booking == null)
-                return null;
+                return new DTO_BookingDetails();
 
             return new DTO_BookingDetails
             {
