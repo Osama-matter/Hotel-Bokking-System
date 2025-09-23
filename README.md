@@ -290,6 +290,7 @@ The project follows a layered architectural pattern, common in ASP.NET Core appl
 *   **Migrations:** Entity Framework Core Migrations for database schema management.
 *   **Validation:** Data annotations and custom validation attributes.
 *   **PDF Generation:** `PDF_Generator/PdfGenerator.cs` (indicates a custom PDF generation utility).
+*   **Real-time Notifications:** Implement real-time updates for booking status changes or new reviews.
 
 ## 4. Installation & Setup
 
@@ -371,8 +372,7 @@ Once the application is running:
 
 *   **Comprehensive Testing:** Implement a full suite of unit, integration, and end-to-end tests.
 *   **Advanced Room Search:** Implement features to search rooms by dates, amenities, price range, etc.
-*   **User Interface (UI):** Develop a modern and responsive front-end application (e.g., using React, Angular, or Vue.js) to consume the API.
-*   **Real-time Notifications:** Implement real-time updates for booking status changes or new reviews.
+*   **User Interface (UI):** Develop a modern and responsive front-end application (e.g., using React, Angular, or Vue.js) to consume the API
 *   **Logging and Monitoring:** Integrate a robust logging framework and monitoring tools.
 *   **Payment Gateway Integration:** Integrate with a live payment gateway (e.g., Stripe, PayPal).
 *   **Admin Dashboard:** Create a dedicated admin dashboard for managing rooms, bookings, users, and reviews more efficiently.
@@ -398,5 +398,7 @@ Once the application is running:
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/274569d7-f317-4496-942b-bf3d0a8b24af" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1eaa9e5c-b605-4c20-98ee-e7b7d5ecc8e7" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c1beec09-2105-4585-b9f7-a6c06aa0fc8d" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d69db2c1-328f-4507-9656-545969347668" />
+
 
 
